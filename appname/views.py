@@ -12,28 +12,28 @@ def index(request):
     return render(request, 'appname/index.html',context)
 
 def login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = auth.authenticate(username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            try:
-                if UserDetail.objects.filter(patient=user).exists():
-                    return redirect('user_dashboard')
-                elif SponsorDetail.objects.filter(sponsor=user).exists():
-                    return redirect('sponsor_dashboard')
-                else:
-                    messages.info(request, "User type is not recognized.")
-                    return redirect('appname/login.html')
-            except Exception as e:
-                messages.error(request, f"An error occurred: {str(e)}")
-                return redirect('appname/login.html')
-        else:
-            # messages.info(request, "Invalid login details!")
-            return redirect('appname/login.html')
-    
-    return render(request, "appname/login.html")
+   if request.method == 'POST':
+       username = request.POST['username']
+       password = request.POST['password']
+       user = auth.authenticate(username=username, password=password)
+       if user is not None:
+           auth.login(request, user)
+           try:
+               if UserDetail.objects.filter(patient=user).exists():
+                   return redirect('user_dashboard')
+               elif SponsorDetail.objects.filter(sponsor=user).exists():
+                   return redirect('sponsor_dashboard')
+               else:
+                   messages.info(request, "User type is not recognized.")
+                   return redirect('login') 
+           except Exception as e:
+               messages.error(request, f"An error occurred: {str(e)}")
+               return redirect('login') 
+       else:
+           messages.info(request, "Invalid login details!") 
+           return redirect('login')  
+   
+   return render(request, "appname/login.html")
 
 def logout(request):
     auth.logout(request)
